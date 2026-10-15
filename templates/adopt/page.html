@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Petconecta - Adoção{% endblock %}
+
+{% block content %}
+<div>
+    <section class="card bg-1" style="max-width: 320px">
+        <img src="{% static 'img/dog.png' %}" class="card-img-top" />
+        <div class="card-body">
+            <h4 class="card-title">Filhote</h4>
+            <p class="card-text">
+                Exemplo de texto onde ficaria um filhote para adoção
+            </p>
+            <a href="#" class="btn-solid theme-primary">Detalhes</a>
+        </div>
+    </section>
+</div>
+{% endblock %}
