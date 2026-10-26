@@ -17,7 +17,7 @@ urlpatterns = [
     ),
     path(
         "delete/",
-        views.delete_account,
+        views.delete,
         name="delete_account",
     ),
 ]

@@ -1,4 +1,6 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from pets.forms import PetForm
 from pets.models import Pet
@@ -28,7 +30,8 @@ def list(request):
 
     return render(request, "pets/list.html", {"pets": pets})
 
-
+@login_required
+@require_POST
 def delete(request, pk=None):
     pet = Pet.objects.get(pk)
     pet.delete()

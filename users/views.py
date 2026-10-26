@@ -21,7 +21,7 @@ def register(request):
 
 @login_required
 @require_POST
-def delete_account(request):
+def delete(request):
     user = request.user
     logout(request)
     user.delete()

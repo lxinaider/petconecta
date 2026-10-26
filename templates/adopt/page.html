@@ -4,16 +4,40 @@
 {% block title %}Petconecta - Adoção{% endblock %}
 
 {% block content %}
-<div>
-    <section class="card bg-1" style="max-width: 320px">
-        <img src="{% static 'img/dog.png' %}" class="card-img-top" />
-        <div class="card-body">
-            <h4 class="card-title">Filhote</h4>
-            <p class="card-text">
-                Exemplo de texto onde ficaria um filhote para adoção
-            </p>
-            <a href="#" class="btn-solid theme-primary">Detalhes</a>
-        </div>
-    </section>
+<div class="pet-list">
+  {% for pet in pets %}
+  <section class="card bg-1" style="max-width: 320px">
+    {% if pet.image %}
+    <img src="{{ pet.image.url }}" class="card-img-top" alt="{{ pet.name }}" />
+    {% else %}
+    <img
+      src="{% static 'img/dog.png' %}"
+      class="card-img-top"
+      alt="Imagem não disponível"
+    />
+    {% endif %}
+
+    <div class="card-body">
+      <h4 class="card-title">{{ pet.name }}</h4>
+
+      <p class="card-text">
+        {{ pet.species }} {% if pet.breed %} - {{ pet.breed }} {% endif %}
+      </p>
+
+      <p class="card-text">{{ pet.description|truncatewords:20 }}</p>
+
+      <p class="card-text">ONG: {{ pet.ong.legal_name }}</p>
+
+      <a
+        href="{% url 'pets:detalhes' pet.pk %}"
+        class="btn-solid theme-primary"
+      >
+        Detalhes
+      </a>
+    </div>
+  </section>
+  {% empty %}
+  <p>Nenhum pet cadastrado para adoção no momento.</p>
+  {% endfor %}
 </div>
 {% endblock %}
