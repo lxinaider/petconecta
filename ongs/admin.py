@@ -1,3 +1,20 @@
 from django.contrib import admin
 
-# Register your models here.
+from ongs.models import Ong
+
+
+class OngAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "legal_name",
+        "trade_Name",
+        "cnpj",
+        "email",
+        "phone",
+        "city",
+        "state",
+        "description",
+    )
+
+
+admin.site.register(Ong)
