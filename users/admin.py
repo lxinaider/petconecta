@@ -8,12 +8,12 @@ from users.models import User
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
         *(UserAdmin.fieldsets or ()),
-        ("Additional information", {"fields": ("phone",)}),
+        ("Additional information", {"fields": ("phone", "ong")}),
     )
 
     add_fieldsets = (
         *(UserAdmin.add_fieldsets or ()),
-        ("Additional information", {"fields": ("phone",)}),
+        ("Additional information", {"fields": ("phone", "ong")}),
     )
 
     list_display = (

@@ -13,22 +13,33 @@ def update(request, pk=None):
         form.save()
         return redirect("/")
 
-    return render(request, "pets/add.html", {"form": form})
+    return render(request, "pets/create.html", {"form": form})
 
 
+@login_required
 def create(request):
-    form = PetForm(request.POST or None, request.FILES or None)
-    if form.is_valid():
-        form.save()
-        return redirect("/")
+    print(request.user)
+    ong = request.user.ong
 
-    return render(request, "pets/add.html", {"form": form})
+    if ong is None:
+        return redirect("create_ong")
+
+    form = PetForm(request.POST or None, request.FILES or None)
+
+    if form.is_valid():
+        pet = form.save(commit=False)
+        pet.ong = ong
+        pet.save()
+        return redirect("home")
+
+    return render(request, "pets/create.html", {"form": form})
 
 
 def list(request):
     pets = Pet.objects.all()
 
     return render(request, "pets/list.html", {"pets": pets})
+
 
 @login_required
 @require_POST

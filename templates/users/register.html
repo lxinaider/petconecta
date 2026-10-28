@@ -19,12 +19,12 @@ Cadastro{% endblock %} {% block content %}
               {{ field }} {% if field.help_text %}
               <div class="form-text">{{ field.help_text }}</div>
               {% endif %} {% for error in field.errors %}
-              <div class="text-danger small">{{ error }}</div>
+              <div class="fg-danger small">{{ error }}</div>
               {% endfor %}
             </div>
             {% endfor %}
 
-            <button type="submit" class="btn btn-primary w-100">
+            <button type="submit" class="btn bg-primary w-100">
               Criar conta
             </button>
           </form>

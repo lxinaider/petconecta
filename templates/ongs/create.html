@@ -21,7 +21,7 @@ ONG{% endblock %} {% block content %}
               >
                 <label for="{{ field.id_for_label }}" class="form-label">
                   {{ field.label }} {% if field.field.required %}
-                  <span class="text-danger">*</span>
+                  <span class="fg-danger">*</span>
                   {% endif %}
                 </label>
 
@@ -35,14 +35,19 @@ ONG{% endblock %} {% block content %}
             </div>
 
             <div class="d-flex justify-content-end gap-2 mt-4">
-              <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+              <a href="{% url 'home' %}" class="btn">
                 Cancelar
               </a>
 
-              <button type="submit" class="btn btn-primary">
+              <button type="submit" class="btn bg-primary px-4">
                 Cadastrar ONG
               </button>
             </div>
+
+            <p class="fg-danger small mt-3 mb-0">
+              <span class="text-danger">*</span>
+              Campos obrigatórios.
+            </p>
           </form>
         </div>
       </div>

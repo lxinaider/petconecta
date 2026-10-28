@@ -1,0 +1,61 @@
+{% extends "base.html" %} {% block title %}Cadastrar animal | Petconecta
+{% endblock %} {% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8 col-xl-7">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white py-3">
+          <h2 class="h4 mb-1">Cadastrar animal</h2>
+          <p class="text-body-secondary mb-0">
+            Preencha as informações abaixo para cadastrar um animal.
+          </p>
+        </div>
+
+        <div class="card-body p-4">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %} {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="row g-3">
+              {% for field in form %}
+              <div class="mb-3">
+                <label
+                  for="{{ field.id_for_label }}"
+                  class="form-label fw-medium"
+                >
+                  {{ field.label }} {% if field.field.required %}
+                  <span class="fg-danger">*</span>
+                  {% endif %}
+                </label>
+
+                {{ field }} {% if field.help_text %}
+                <div class="form-text">{{ field.help_text }}</div>
+                {% endif %} {% for error in field.errors %}
+                <div class="text-danger small mt-1">{{ error }}</div>
+                {% endfor %}
+              </div>
+              {% endfor %}
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <a href="{% url 'home' %}" class="btn">
+                Cancelar
+              </a>
+
+              <button type="submit" class="btn bg-primary px-4">
+                Cadastrar
+              </button>
+            </div>
+
+            <p class="fg-danger small mt-3 mb-0">
+              <span class="text-danger">*</span>
+              Campos obrigatórios.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

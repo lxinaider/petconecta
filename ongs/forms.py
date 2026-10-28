@@ -8,7 +8,7 @@ class OngForm(forms.ModelForm):
         model = Ong
         fields = [  # noqa: RUF012
             "legal_name",
-            "trade_Name",
+            "trade_name",
             "cnpj",
             "email",
             "phone",
@@ -17,9 +17,20 @@ class OngForm(forms.ModelForm):
             "description",
         ]
 
+        labels = {  # noqa: RUF012
+            "legal_name": "Nome legal",
+            "trade_name": "Nome fantasia",
+            "cnpj": "CNPJ",
+            "email": "E-mail",
+            "phone": "Telefone",
+            "state": "UF",
+            "city": "Cidade",
+            "description": "Descrição",
+        }
+
         widgets = {  # noqa: RUF012
             "legal_name": forms.TextInput(attrs={"class": "form-control"}),
-            "trade_Name": forms.TextInput(attrs={"class": "form-control"}),
+            "trade_name": forms.TextInput(attrs={"class": "form-control"}),
             "cnpj": forms.TextInput(
                 attrs={
                     "class": "form-control",

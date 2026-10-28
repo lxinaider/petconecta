@@ -3,14 +3,8 @@ from django.db import models
 
 
 class Ong(models.Model):
-    admins = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        related_name="managed_ongs",
-        blank=True,
-    )
-
     legal_name = models.CharField(max_length=20)
-    trade_Name = models.CharField(max_length=20)
+    trade_name = models.CharField(max_length=20)
     cnpj = models.CharField(max_length=14)
     email = models.EmailField()
     phone = models.CharField(max_length=11)
