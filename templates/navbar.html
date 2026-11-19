@@ -1,0 +1,56 @@
+{% load static %}
+
+<nav class="navbar navbar-translucent md:navbar-expand">
+  <div class="container-fluid align-items-center">
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <img src="{% static 'img/logo.svg' %}" alt="Focinhus" class="d-block" />
+    </a>
+
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="{% url 'home' %}">
+          Início
+        </a>
+      </li>
+    </ul>
+
+    <!-- ms-auto moved here -->
+    <ul class="navbar-nav ms-auto">
+      {% if user.is_authenticated %}
+      <li class="nav-item">
+        <span class="nav-link py-0 px-4">
+          Olá, {{ user.name|default:user.username|default:user.email }}
+        </span>
+      </li>
+      <li class="nav-item">
+        <form method="post" action="{% url 'logout' %}" class="m-0 p-0">
+          {% csrf_token %}
+          <button type="submit" class="nav-link">
+            Sair
+          </button>
+        </form>
+      </li>
+      {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'login' %}">Entrar</a>
+      </li>
+      {% endif %}
+
+      {% if user.ong %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'home_ong' %}">Gerenciar ONG</a>
+      </li>
+      {% elif user.is_authenticated %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'create_ong' %}">Cadastrar ONG</a>
+      </li>
+      {% endif %}
+
+      {% if user.is_staff %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>

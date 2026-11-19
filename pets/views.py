@@ -6,21 +6,24 @@ from pets.forms import PetForm
 from pets.models import Pet
 
 
-def update(request, pk=None):
-    pet = Pet.objects.get(pk)
+@login_required
+def update(request, pk):
+    ong = request.user.ong
+    if ong is None:
+        return redirect("create_ong")
+
+    pet = get_object_or_404(Pet, pk=pk)
     form = PetForm(request.POST or None, request.FILES or None, instance=pet)
     if form.is_valid():
         form.save()
-        return redirect("/")
+        return redirect("home_ong")
 
     return render(request, "pets/create.html", {"form": form})
 
 
 @login_required
 def create(request):
-    print(request.user)
     ong = request.user.ong
-
     if ong is None:
         return redirect("create_ong")
 
@@ -44,11 +47,15 @@ def list(request):
 @login_required
 @require_POST
 def delete(request, pk=None):
-    pet = Pet.objects.get(pk)
-    pet.delete()
+    pet = get_object_or_404(Pet, pk=pk)
+
+    if request.user.ong.pk == pet.ong.pk:
+        pet.delete()
+        return redirect("home")
+
     return redirect("home")
 
 
 def detail(request, pk):
-    pets = get_object_or_404(Pet, pk)
-    return render(request, "pet/detail.html", {"pets": pets})
+    pet = get_object_or_404(Pet, pk=pk)
+    return render(request, "pets/detail.html", {"pet": pet})

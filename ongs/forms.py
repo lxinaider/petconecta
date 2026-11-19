@@ -6,7 +6,7 @@ from .models import Ong
 class OngForm(forms.ModelForm):
     class Meta:
         model = Ong
-        fields = [  # noqa: RUF012
+        fields = [
             "legal_name",
             "trade_name",
             "cnpj",
@@ -15,9 +15,10 @@ class OngForm(forms.ModelForm):
             "city",
             "state",
             "description",
+            "image",
         ]
 
-        labels = {  # noqa: RUF012
+        labels = {
             "legal_name": "Nome legal",
             "trade_name": "Nome fantasia",
             "cnpj": "CNPJ",
@@ -26,9 +27,10 @@ class OngForm(forms.ModelForm):
             "state": "UF",
             "city": "Cidade",
             "description": "Descrição",
+            "image": "Imagem",
         }
 
-        widgets = {  # noqa: RUF012
+        widgets = {
             "legal_name": forms.TextInput(attrs={"class": "form-control"}),
             "trade_name": forms.TextInput(attrs={"class": "form-control"}),
             "cnpj": forms.TextInput(

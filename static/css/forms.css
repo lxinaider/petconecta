@@ -1,0 +1,62 @@
+.form-wrap {
+  min-height: 70vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1rem;
+
+  & .card {
+    min-width: min(100%, 25rem);
+  }
+}
+
+.form-field {
+  margin-bottom: 1rem;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.form-field
+  :is(input:not([type="checkbox"], [type="radio"]), select, textarea) {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  font: inherit;
+  color: inherit;
+  border: 1.5px solid rgb(0 0 0 / 0.12);
+  border-radius: var(--radius-control);
+  box-shadow: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.form-field :is(input, select, textarea):focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.form-field__help {
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+.form-field__error {
+  margin-top: 0.3rem;
+  font-size: 0.82rem;
+  color: var(--danger);
+}
+
+.form-alert {
+  margin-bottom: 1rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-control);
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--danger) 80%, black);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+}

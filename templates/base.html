@@ -1,15 +1,14 @@
 {% load static %}
-
-<html>
+<!doctype html>
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Petconecta{% endblock %}</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Font Awesome 6 -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
       rel="stylesheet"
     />
 
@@ -21,60 +20,12 @@
       crossorigin="anonymous"
     />
 
-    <style>
-      :root {
-        --bs-body-font-family: "Inter", system-ui, sans-serif;
-
-        --bs-bg-body: light-dark(var(--bs-pewter-025), var(--bs-pewter-975));
-        --bs-bg-secondary: light-dark(
-          var(--bs-pewter-100),
-          var(--bs-pewter-900)
-        );
-        --bs-bg-subtle: light-dark(var(--bs-pewter-300), var(--bs-pewter-950));
-        --bs-bg-muted: light-dark(var(--bs-pewter-050), var(--bs-pewter-800));
-
-        --bs-bg-1: light-dark(var(--bs-pewter-100), var(--bs-pewter-950));
-        --bs-bg-2: light-dark(var(--bs-pewter-200), var(--bs-pewter-900));
-        --bs-bg-3: light-dark(var(--bs-pewter-300), var(--bs-pewter-800));
-        --bs-bg-4: light-dark(var(--bs-pewter-400), var(--bs-pewter-700));
-      }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/globals.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/components/index.css' %}" />
+    {% block head %}{% endblock %}
   </head>
   <body>
-    <div class="nav-overflow p-2" data-bs-toggle="nav-overflow">
-      <ul class="nav nav-pills align-items-center">
-        <li class="nav-item">
-          <a
-            class="nav-link active"
-            aria-current="page"
-            href="{% url 'home' %}"
-          >
-            Início
-          </a>
-        </li>
-
-        {% if user.is_authenticated %}
-        <li class="nav-item ms-auto">
-          <span class="nav-link"> Olá, {{ user.name|default:user.username|default:user.email }} </span>
-        </li>
-        <li class="nav-item">
-          <form method="post" action="{% url 'logout' %}" class="d-flex m-0">
-            {% csrf_token %}
-            <button type="submit" class="nav-link btn bg-danger">Sair</button>
-          </form>
-        </li>
-        {% else %}
-        <li class="nav-item ms-auto">
-          <a class="nav-link" href="{% url 'login' %}"> Entrar </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link btn bg-primary" href="{% url 'register' %}">
-            Cadastrar
-          </a>
-        </li>
-        {% endif %}
-      </ul>
-    </div>
+    {% include 'navbar.html' %}
 
     <main class="p-6">{% block content %} {% endblock %}</main>
 

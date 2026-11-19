@@ -1,0 +1,59 @@
+/* Marker */
+.marker,
+.card__cta,
+.card__footer a,
+.navbar :is(a, button).nav-link {
+  --marker-size: 0.35em;
+  box-shadow: inset 0 calc(var(--marker-size) * -1) 0
+    color-mix(in srgb, var(--accent) 45%, transparent);
+  transition: box-shadow 0.25s ease;
+}
+
+.marker:is(:hover, :focus-visible),
+.card__footer a:is(:hover, :focus-visible),
+.navbar :is(a, button).nav-link:is(:hover, :focus-visible),
+.card:hover .card__cta {
+  --marker-size: 1.2em;
+}
+
+.marker {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Tint */
+.tint,
+.card__media,
+.avatar {
+  background: color-mix(in srgb, var(--accent) var(--tint, 14%), transparent);
+}
+
+/* Small label */
+.eyebrow,
+.facts dt,
+.data-table th {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.muted {
+  opacity: 0.6;
+}
+
+.accent-cycle > :nth-child(5n + 1) {
+  --accent: var(--brand-1);
+}
+.accent-cycle > :nth-child(5n + 2) {
+  --accent: var(--brand-2);
+}
+.accent-cycle > :nth-child(5n + 3) {
+  --accent: var(--brand-3);
+}
+.accent-cycle > :nth-child(5n + 4) {
+  --accent: var(--brand-4);
+}
+.accent-cycle > :nth-child(5n + 5) {
+  --accent: var(--brand-5);
+}

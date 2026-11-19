@@ -1,39 +1,26 @@
-{% extends 'base.html' %} {% load static %} {% block title %}Petconecta -
-Login{% endblock %} {% block content %}
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-12 col-lg-8 col-xl-7">
-      <div class="card shadow-sm border-0">
-        <div class="card-header bg-primary text-white py-3">
-          <h2 class="h4 mb-1">Login</h2>
-        </div>
+{% extends 'base.html' %} {% load static %}
 
-        <div class="card-body p-4">
-          <form method="post">
-            {% csrf_token %} {% for field in form %}
-            <div class="mb-3">
-              <label for="{{ field.id_for_label }}" class="form-label">
-                {{ field.label }}
-              </label>
+{% block title %}Petconecta -
+Entrar{% endblock %}
 
-              {{ field }} {% if field.help_text %}
-              <div class="form-text">{{ field.help_text }}</div>
-              {% endif %} {% for error in field.errors %}
-              <div class="fg-danger small">{{ error }}</div>
-              {% endfor %}
-            </div>
-            {% endfor %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/forms.css' %}" />
+{% endblock %} {% block content %}
+<div class="form-wrap">
+  <section class="card">
+    <div class="card__body">
+      <h1 class="card__title">Bem-vindo</h1>
+      <p class="card__subtitle">Entre para continuar com a adoção</p>
 
-            <button type="submit" class="btn bg-primary w-100">Entrar</button>
-          </form>
+      <form method="post" novalidate>
+        {% include 'partials/form.html' with submit_label="Entrar" %}
+      </form>
 
-          <p class="text-center text-body-secondary mt-4 mb-0">
-            Ainda não tem uma conta?
-            <a href="{% url 'register' %}"> Cadastre-se </a>
-          </p>
-        </div>
-      </div>
+      <p class="card__footer">
+        Ainda não tem uma conta?
+        <a href="{% url 'register' %}">Cadastre-se</a>
+      </p>
     </div>
-  </div>
+  </section>
 </div>
 {% endblock %}

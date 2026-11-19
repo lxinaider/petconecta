@@ -11,6 +11,11 @@ class Ong(models.Model):
     city = models.CharField(max_length=20)
     state = models.CharField(max_length=2)
     description = models.CharField(max_length=150)
+    image = models.ImageField(
+        upload_to="ongs/",
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return self.legal_name

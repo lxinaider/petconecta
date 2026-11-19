@@ -3,39 +3,29 @@
 
 {% block title %}Petconecta - Adoção{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/pets/styles.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="pet-list">
+<div class="pet-grid accent-cycle">
   {% for pet in pets %}
-  <section class="card bg-1" style="max-width: 320px">
-    {% if pet.image %}
-    <img src="{{ pet.image.url }}" class="card-img-top" alt="{{ pet.name }}" />
-    {% else %}
-    <img
-      src="{% static 'img/dog.png' %}"
-      class="card-img-top"
-      alt="Imagem não disponível"
-    />
-    {% endif %}
-
-    <div class="card-body">
-      <h4 class="card-title">{{ pet.name }}</h4>
-
-      <p class="card-text">
-        {{ pet.species }} {% if pet.breed %} - {{ pet.breed }} {% endif %}
-      </p>
-
-      <p class="card-text">{{ pet.description|truncatewords:20 }}</p>
-
-      <p class="card-text">ONG: {{ pet.ong.legal_name }}</p>
-
-      <a
-        href=""
-        class="btn-solid theme-primary"
-      >
-        Detalhes
-      </a>
+  <div class="card card--clickable">
+    <div class="card__media card__media--zoom">
+      {% if pet.image %}
+      <img src="{{ pet.image.url }}" alt="{{ pet.name }}" loading="lazy" />
+      {% endif %}
+      <span class="card__species">{{ pet.species }}</span>
     </div>
-  </section>
+
+    <div class="card__body">
+      <h3 class="card__name">{{ pet.name }}</h3>
+      {% if pet.breed %}<p class="card__breed">{{ pet.breed }}</p>{% endif %}
+      <p class="card__desc">{{ pet.description|truncatewords:20 }}</p>
+
+      <a href="{% url 'detail_pet' pet.id %}" class="card__cta">Conhecer</a>
+    </div>
+  </div>
   {% empty %}
   <p>Nenhum pet cadastrado para adoção no momento.</p>
   {% endfor %}

@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Petconecta - Painel da ONG{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/ongs/styles.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div>
+  <header class="mb-4">
+    <p class="card__label m-0">Painel administrativo</p>
+    <h1 class="h2 fw-bold m-0">{{ ong.trade_name }}</h1>
+  </header>
+
+  <div class="panel__layout">
+    <aside class="card panel__aside">
+      <div class="card__media">
+        {% if ong.image %}
+        <img
+          src="{{ ong.image.url }}"
+          alt="{{ ong.trade_name }}"
+          loading="lazy"
+        />
+        {% else %}
+        <span class="card__placeholder" aria-hidden="true"
+          >{{ ong.trade_name|slice:":1"|upper }}</span
+        >
+        {% endif %}
+      </div>
+
+      <div class="card__body">
+        <p class="card__label">Nome fantasia</p>
+        <h2 class="card__name">{{ ong.trade_name }}</h2>
+
+        <p class="card__label">Nome legal</p>
+        <p class="fw-semibold m-0">{{ ong.legal_name }}</p>
+
+        <dl class="facts">
+          <div>
+            <dt>Localização</dt>
+            <dd>{{ ong.city }}, {{ ong.state }}</dd>
+          </div>
+          <div>
+            <dt>Telefone</dt>
+            <dd>{{ ong.phone }}</dd>
+          </div>
+          <div>
+            <dt>Descrição</dt>
+            <dd>{{ ong.description|default:"Nenhuma" }}</dd>
+          </div>
+        </dl>
+
+        <a href="{% url 'update_ong' ong.pk %}" class="btn mt-auto align-self-start"
+          >Editar</a
+        >
+      </div>
+    </aside>
+
+    <div class="panel__main">
+      <section class="card card--roomy" aria-labelledby="pets-title">
+        <div
+          class="d-flex align-items-center justify-content-between gap-3 mb-3"
+        >
+          <h2 class="h5 fw-bold m-0" id="pets-title">Pets da ONG</h2>
+          <a href="{% url 'create_pet' %}" class="btn">Adicionar</a>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th scope="col">Pet</th>
+                <th scope="col">Espécie</th>
+                <th scope="col" class="data-table__actions">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for pet in ong.pets.all %}
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center gap-3">
+                    <span class="avatar avatar--sm avatar--square">
+                      {% if pet.image %}
+                      <img src="{{ pet.image.url }}" alt="" loading="lazy" />
+                      {% else %}
+                      <img
+                        src="{% static 'img/dog.png' %}"
+                        alt=""
+                        loading="lazy"
+                      />
+                      {% endif %}
+                    </span>
+                    <span class="d-flex flex-column lh-sm">
+                      <strong>{{ pet.name }}</strong>
+                      {% if pet.breed %}
+                      <small class="muted">{{ pet.breed }}</small>
+                      {% endif %}
+                    </span>
+                  </div>
+                </td>
+                <td>{{ pet.species }}</td>
+                <td class="data-table__actions">
+                  <a
+                    href="{% url 'detail_pet' pet.pk %}"
+                    class="btn btn--icon btn--ghost"
+                    title="Ver"
+                  >
+                    <i class="fa-solid fa-eye"></i>
+                  </a>
+                  <a
+                    href="{% url 'update_pet' pet.pk %}"
+                    class="btn btn--icon btn--ghost"
+                    title="Editar"
+                  >
+                    <i class="fa-solid fa-pen"></i>
+                  </a>
+                  <form
+                    method="POST"
+                    action="{% url 'delete_pet' pet.pk %}"
+                    class="inline-form"
+                  >
+                    {% csrf_token %}
+                    <button
+                      type="submit"
+                      class="btn btn--icon btn--ghost btn--danger"
+                      title="Remover"
+                    >
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="3" class="data-table__empty">
+                  Nenhum cadastrado ainda
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card card--roomy" aria-labelledby="admins-title">
+        <div
+          class="d-flex align-items-center justify-content-between gap-3 mb-3"
+        >
+          <h2 class="h5 fw-bold m-0" id="admins-title">Administradores</h2>
+          <a href="#" class="btn">Adicionar</a>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">E-mail</th>
+                <th scope="col">Telefone</th>
+                <th scope="col" class="data-table__actions">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for admin in ong.admins.all %}
+              <tr>
+                <td>
+                  {{ admin.name }} {% if admin.id == user.id %}<span
+                    class="badge theme-primary ms-2"
+                    >Você</span
+                  >{% endif %}
+                </td>
+                <td>{{ admin.email }}</td>
+                <td>{{ admin.phone|default:"—" }}</td>
+                <td class="data-table__actions">
+                  {% if admin.id != user.id %}
+                  <a
+                    href="{% url 'delete_admin' admin.pk %}"
+                    class="btn btn--icon btn--ghost btn--danger"
+                    title="Remover"
+                  >
+                    <i class="fa-solid fa-trash"></i>
+                  </a>
+                  {% else %}
+                  <span class="data-table__self">Você não pode realizar uma ação sobre si mesmo</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}

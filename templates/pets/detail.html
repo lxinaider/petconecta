@@ -1,0 +1,63 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Petconecta
+- {{pet.name }}{% endblock %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/pets/styles.css' %}" />
+{% endblock %} {% block content %}
+<div class="pet-detail-wrap">
+  <a href="{% url 'home' %}" class="marker fw-semibold align-self-start">
+    <i class="fa-solid fa-arrow-left"></i> Voltar
+  </a>
+
+  <article class="card card--split">
+    <div class="card__media">
+      {% if pet.image %}
+      <img src="{{ pet.image.url }}" alt="{{ pet.name }}" loading="lazy" />
+      {% endif %}
+      <span class="card__species">{{ pet.species }}</span>
+    </div>
+
+    <div class="card__body">
+      <h1 class="card__name card__name--lg">{{ pet.name }}</h1>
+      {% if pet.breed %}
+      <p class="card__breed">{{ pet.breed }}</p>
+      {% endif %}
+
+      <h2 class="card__heading">Sobre</h2>
+      <div class="card__desc">{{ pet.description }}</div>
+
+      <a href="#" class="btn btn--lg mt-auto align-self-start"
+        >Adotar {{ pet.name }}</a
+      >
+    </div>
+  </article>
+
+  <section class="card card--row" aria-labelledby="ong-title">
+    <div class="avatar avatar--lg" aria-hidden="true">
+      {{ pet.ong.trade_name|slice:":1"|upper }}
+    </div>
+
+    <div class="card__info">
+      <p class="eyebrow m-0">Sobre a ONG</p>
+      <h2 class="card__name" id="ong-title">{{ pet.ong.trade_name }}</h2>
+      {% if pet.ong.city %}
+      <p class="card__breed">{{ pet.ong.city }}</p>
+      {% endif %} {% if pet.ong.description %}
+      <p class="card__desc mb-0">{{ pet.ong.description }}</p>
+      {% endif %}
+    </div>
+
+    <div class="card__actions">
+      {% if pet.ong.email %}
+      <a class="marker" href="mailto:{{ pet.ong.email }}">
+        E-mail
+      </a>
+      {% endif %}
+
+      {% if pet.ong.phone %}
+      <a class="marker" href="tel:{{ pet.ong.phone }}">
+        Telefone
+      </a>
+      {% endif %}
+    </div>
+  </section>
+</div>
+{% endblock %}
