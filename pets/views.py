@@ -1,9 +1,10 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from pets.forms import PetForm
-from pets.models import Pet
+from pets.models import Adoption, Pet
 
 
 @login_required
@@ -58,4 +59,26 @@ def delete(request, pk=None):
 
 def detail(request, pk):
     pet = get_object_or_404(Pet, pk=pk)
-    return render(request, "pets/detail.html", {"pet": pet})
+    adoption = None
+    if request.user.is_authenticated:
+        adoption = Adoption.objects.filter(pet=pet, user=request.user).first()
+
+    return render(
+        request,
+        "pets/detail.html",
+        {"pet": pet, "adoption": adoption},
+    )
+
+
+@login_required
+@require_POST
+def request_adoption(request, pk):
+    pet = get_object_or_404(Pet, pk=pk)
+    adoption, created = Adoption.objects.get_or_create(pet=pet, user=request.user)
+
+    if created:
+        messages.success(request, f"Sua solicitação para adotar {pet.name} foi enviada.")
+    else:
+        messages.info(request, f"Você já enviou uma solicitação para adotar {pet.name}.")
+
+    return redirect("detail_pet", pk=pet.pk)

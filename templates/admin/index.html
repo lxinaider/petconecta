@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Petconecta - Aprovação de ONGs{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/forms.css' %}" />
+<link rel="stylesheet" href="{% static 'css/components/table.css' %}" />
+{% endblock %}
+
+{% block content %}
+<section class="card card--roomy">
+  <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+    <h1 class="h4 fw-bold m-0">Solicitações de ONGs</h1>
+  </div>
+
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th scope="col">ONG</th>
+          <th scope="col">CNPJ</th>
+          <th scope="col">Contato</th>
+          <th scope="col">Solicitante</th>
+          <th scope="col" class="data-table__actions">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ong in pending_ongs %}
+        <tr>
+          <td>
+            <strong>{{ ong.trade_name }}</strong>
+            <br><small class="muted">{{ ong.city }}/{{ ong.state }}</small>
+          </td>
+          <td>{{ ong.cnpj }}</td>
+          <td>
+            {{ ong.email }}<br>
+            <small class="muted">{{ ong.phone }}</small>
+          </td>
+          <td>{{ ong.created_by.name|default:ong.created_by.email }}</td>
+          <td class="data-table__actions">
+            <form method="post" action="{% url 'approve_ong' ong.pk %}" class="inline-form">
+              {% csrf_token %}
+              <button type="submit" class="btn">Aprovar</button>
+            </form>
+            <form method="post" action="{% url 'reject_ong' ong.pk %}" class="inline-form">
+              {% csrf_token %}
+              <button type="submit" class="btn btn--danger">Recusar</button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="data-table__empty">Nenhuma solicitação pendente.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Solicitação de adoção{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column gap-4">
+  <a href="{% url 'home_ong' %}" class="marker fw-semibold align-self-start">
+    <i class="fa-solid fa-arrow-left"></i> Voltar
+  </a>
+
+  <article class="card card--row">
+    <div class="avatar avatar--lg" aria-hidden="true">
+      {% if adoption.pet.image %}
+      <img src="{{ adoption.pet.image.url }}" alt="{{ adoption.pet.name }}" />
+      {% else %}
+      {{ adoption.pet.name|slice:":1"|upper }}
+      {% endif %}
+    </div>
+
+    <div class="card__info">
+      <p class="eyebrow m-0">Solicitação de adoção</p>
+      <h1 class="card__name">{{ adoption.pet.name }}</h1>
+      <p class="card__breed">{{ adoption.pet.species }}{% if adoption.pet.breed %} - {{ adoption.pet.breed }}{% endif %}</p>
+    </div>
+
+    <div class="card__actions">
+      <span class="badge theme-primary">{{ adoption.get_status_display }}</span>
+    </div>
+  </article>
+
+  <section class="card card--roomy">
+    <h2 class="h5 fw-bold">Dados do interessado</h2>
+    <dl class="facts">
+      <div>
+        <dt>Nome</dt>
+        <dd>{{ adoption.user.name|default:"Não informado" }}</dd>
+      </div>
+      <div>
+        <dt>E-mail</dt>
+        <dd>{{ adoption.user.email }}</dd>
+      </div>
+      <div>
+        <dt>Telefone</dt>
+        <dd>{{ adoption.user.phone|default:"Não informado" }}</dd>
+      </div>
+      <div>
+        <dt>Solicitado em</dt>
+        <dd>{{ adoption.created_at|date:"d/m/Y H:i" }}</dd>
+      </div>
+    </dl>
+
+    {% if adoption.status == "pending" %}
+    <form method="post" action="{% url 'approve_adoption' adoption.pk %}" class="mt-3">
+      {% csrf_token %}
+      <button type="submit" class="btn">Aprovar adoção</button>
+    </form>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

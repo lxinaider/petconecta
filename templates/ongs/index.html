@@ -59,6 +59,55 @@
     </aside>
 
     <div class="panel__main">
+      <section class="card card--roomy" aria-labelledby="adoptions-title">
+        <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+          <h2 class="h5 fw-bold m-0" id="adoptions-title">Solicitações de adoção pendentes</h2>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th scope="col">Pet</th>
+                <th scope="col">Interessado</th>
+                <th scope="col">Solicitado em</th>
+                <th scope="col" class="data-table__actions">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for adoption in pending_adoptions %}
+              <tr>
+                <td>{{ adoption.pet.name }}</td>
+                <td>{{ adoption.user.name|default:adoption.user.email }}</td>
+                <td>{{ adoption.created_at|date:"d/m/Y H:i" }}</td>
+                <td class="data-table__actions">
+                  <a
+                    href="{% url 'adoption_detail' adoption.pk %}"
+                    class="btn btn--icon btn--ghost"
+                    title="Ver detalhes"
+                  >
+                    <i class="fa-solid fa-eye"></i>
+                  </a>
+                  <form method="post" action="{% url 'approve_adoption' adoption.pk %}" class="inline-form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn" title="Aprovar adoção">
+                      Aprovar
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="4" class="data-table__empty">
+                  Nenhuma adoção pendente
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <section class="card card--roomy" aria-labelledby="pets-title">
         <div
           class="d-flex align-items-center justify-content-between gap-3 mb-3"
@@ -149,8 +198,38 @@
           class="d-flex align-items-center justify-content-between gap-3 mb-3"
         >
           <h2 class="h5 fw-bold m-0" id="admins-title">Administradores</h2>
-          <a href="#" class="btn">Adicionar</a>
         </div>
+
+        <form
+          method="post"
+          action="{% url 'add_admin' %}"
+          class="d-flex gap-2 align-items-start mb-3"
+        >
+          {% csrf_token %}
+          <div class="flex-grow-1">
+            <label for="admin-email" class="visually-hidden">E-mail do usuário</label>
+            <input
+              id="admin-email"
+              name="email"
+              type="email"
+              class="form-control"
+              placeholder="E-mail do usuário"
+              required
+            />
+          </div>
+          <button type="submit" class="btn">Adicionar</button>
+        </form>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div
+          class="form-alert {% if message.tags == 'error' %}fg-danger{% endif %}"
+          role="alert"
+        >
+          {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
 
         <div class="table-responsive">
           <table class="data-table">
@@ -175,13 +254,20 @@
                 <td>{{ admin.phone|default:"—" }}</td>
                 <td class="data-table__actions">
                   {% if admin.id != user.id %}
-                  <a
-                    href="{% url 'delete_admin' admin.pk %}"
-                    class="btn btn--icon btn--ghost btn--danger"
-                    title="Remover"
+                  <form
+                    method="POST"
+                    action="{% url 'delete_admin' admin.pk %}"
+                    class="inline-form"
                   >
-                    <i class="fa-solid fa-trash"></i>
-                  </a>
+                    {% csrf_token %}
+                    <button
+                      type="submit"
+                      class="btn btn--icon btn--ghost btn--danger"
+                      title="Remover"
+                    >
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </form>
                   {% else %}
                   <span class="data-table__self">Você não pode realizar uma ação sobre si mesmo</span>
                   {% endif %}

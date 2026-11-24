@@ -24,9 +24,16 @@
       <h2 class="card__heading">Sobre</h2>
       <div class="card__desc">{{ pet.description }}</div>
 
-      <a href="#" class="btn btn--lg mt-auto align-self-start"
-        >Adotar {{ pet.name }}</a
-      >
+      {% if adoption %}
+      <button type="button" class="btn btn--lg mt-auto align-self-start" disabled>
+        Solicitação {{ adoption.get_status_display|lower }}
+      </button>
+      {% else %}
+      <form method="post" action="{% url 'request_adoption' pet.pk %}" class="mt-auto align-self-start">
+        {% csrf_token %}
+        <button type="submit" class="btn btn--lg">Adotar {{ pet.name }}</button>
+      </form>
+      {% endif %}
     </div>
   </article>
 

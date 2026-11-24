@@ -14,6 +14,20 @@
       </li>
     </ul>
 
+    <form class="navbar-search d-flex align-items-center gap-2 ms-3" method="get" action="{% url 'home' %}">
+      <input
+        class="form-control form-control-sm"
+        type="search"
+        name="q"
+        value="{{ query|default:'' }}"
+        placeholder="Buscar por nome..."
+        aria-label="Buscar pets por nome"
+      />
+      <button class="btn btn-primary btn-sm" type="submit" aria-label="Buscar">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      </button>
+    </form>
+
     <!-- ms-auto moved here -->
     <ul class="navbar-nav ms-auto">
       {% if user.is_authenticated %}
@@ -42,7 +56,7 @@
       </li>
       {% elif user.is_authenticated %}
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'create_ong' %}">Cadastrar ONG</a>
+        <a class="nav-link" href="{% url 'create_ong' %}">ONG</a>
       </li>
       {% endif %}
 

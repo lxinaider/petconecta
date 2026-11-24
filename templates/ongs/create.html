@@ -10,11 +10,16 @@ Cadastrar ONG{% endblock %}
 <div class="form-wrap">
   <section class="card">
     <div class="card__body">
+      {% if pending_ong %}
+      <h1 class="card__title">Solicitação enviada</h1>
+      <p>Sua ONG <strong>{{ pending_ong.trade_name }}</strong> está aguardando aprovação de um administrador.</p>
+      {% else %}
       <h1 class="card__title">{% if form.instance.pk %}Atualizar{% else %}Cadastrar{% endif %} ONG</h1>
 
       <form method="post" enctype="multipart/form-data" novalidate>
         {% include 'partials/form.html' with submit_label=form.instance.pk|yesno:"Atualizar,Cadastrar" %}
       </form>
+      {% endif %}
     </div>
   </section>
 </div>

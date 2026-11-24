@@ -22,3 +22,14 @@
   border: 0;
   background-color: transparent;
 }
+
+.navbar-search {
+  flex: 1 1 20rem;
+  max-width: 28rem;
+}
+
+.navbar-search .form-control,
+.navbar-search .btn {
+  height: 2.25rem;
+  border-radius: var(--radius-control);
+}

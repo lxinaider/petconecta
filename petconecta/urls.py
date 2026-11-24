@@ -26,6 +26,8 @@ urlpatterns = [
     path("django/admin/", admin.site.urls),
     path("", views.home, name="home"),
     path("admin/", views.admin, name="admin"),
+    path("admin/ongs/<int:pk>/approve/", views.approve_ong, name="approve_ong"),
+    path("admin/ongs/<int:pk>/reject/", views.reject_ong, name="reject_ong"),
     path("user/", include("users.urls")),
     path("pet/", include("pets.urls")),
     path("ong/", include("ongs.urls")),
