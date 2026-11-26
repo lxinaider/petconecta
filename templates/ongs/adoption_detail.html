@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Solicitação de adoção{% endblock %}
+{% block title %}Solicitação de adoção - {{ adoption.pet.name }}{% endblock %}
 
 {% block content %}
 <div class="d-flex flex-column gap-4">
@@ -12,7 +12,7 @@
   <article class="card card--row">
     <div class="avatar avatar--lg" aria-hidden="true">
       {% if adoption.pet.image %}
-      <img src="{{ adoption.pet.image.url }}" alt="{{ adoption.pet.name }}" />
+      <img src="{{ adoption.pet.image.url }}" alt="" />
       {% else %}
       {{ adoption.pet.name|slice:":1"|upper }}
       {% endif %}
@@ -21,40 +21,168 @@
     <div class="card__info">
       <p class="eyebrow m-0">Solicitação de adoção</p>
       <h1 class="card__name">{{ adoption.pet.name }}</h1>
-      <p class="card__breed">{{ adoption.pet.species }}{% if adoption.pet.breed %} - {{ adoption.pet.breed }}{% endif %}</p>
+      <p class="card__breed">
+        {{ adoption.pet.species }}{% if adoption.pet.breed %} - {{ adoption.pet.breed }}{% endif %}
+      </p>
     </div>
 
     <div class="card__actions">
+      <a class="marker" href="{% url 'detail_pet' adoption.pet.pk %}">Ver página do pet</a>
       <span class="badge theme-primary">{{ adoption.get_status_display }}</span>
     </div>
   </article>
 
-  <section class="card card--roomy">
-    <h2 class="h5 fw-bold">Dados do interessado</h2>
-    <dl class="facts">
+  <section class="card card--roomy" aria-labelledby="adopter-title">
+    <h2 class="h5 fw-bold" id="adopter-title">Interessado</h2>
+    <dl class="facts facts--cols">
       <div>
         <dt>Nome</dt>
-        <dd>{{ adoption.user.name|default:"Não informado" }}</dd>
+        <dd>{{ adoption.adopter.name|default:"Não informado" }}</dd>
       </div>
       <div>
         <dt>E-mail</dt>
-        <dd>{{ adoption.user.email }}</dd>
+        <dd>
+          <a class="marker" href="mailto:{{ adoption.adopter.email }}">{{ adoption.adopter.email }}</a>
+        </dd>
       </div>
       <div>
         <dt>Telefone</dt>
-        <dd>{{ adoption.user.phone|default:"Não informado" }}</dd>
+        <dd>
+          {% if adoption.adopter.phone %}
+          <a class="marker" href="tel:{{ adoption.adopter.phone }}">{{ adoption.adopter.phone }}</a>
+          {% else %}
+          Não informado
+          {% endif %}
+        </dd>
       </div>
       <div>
         <dt>Solicitado em</dt>
         <dd>{{ adoption.created_at|date:"d/m/Y H:i" }}</dd>
       </div>
     </dl>
+  </section>
+
+  <section class="card card--roomy" aria-labelledby="profile-title">
+    <h2 class="h5 fw-bold" id="profile-title">Moradia e família</h2>
+
+    {% if adoption.adopter.adopter_profile %}
+    <dl class="facts facts--cols">
+      <div>
+        <dt>Nascimento</dt>
+        <dd>
+          {{ adoption.adopter.adopter_profile.birth_date|date:"d/m/Y" }}
+        </dd>
+      </div>
+      <div>
+        <dt>CPF</dt>
+        <dd>{{ adoption.adopter.adopter_profile.cpf }}</dd>
+      </div>
+      <div class="facts__wide">
+        <dt>Endereço</dt>
+        <dd>
+          {{ adoption.adopter.adopter_profile.address }},
+          {{ adoption.adopter.adopter_profile.city }}/{{ adoption.adopter.adopter_profile.state }}
+          - CEP {{ adoption.adopter.adopter_profile.zip_code }}
+        </dd>
+      </div>
+      <div>
+        <dt>Tipo de moradia</dt>
+        <dd>{{ adoption.adopter.adopter_profile.get_housing_display }}</dd>
+      </div>
+      <div>
+        <dt>Situação do imóvel</dt>
+        <dd>{{ adoption.adopter.adopter_profile.is_rented|yesno:"Alugado,Próprio" }}</dd>
+      </div>
+      {% if adoption.adopter.adopter_profile.is_rented %}
+      <div>
+        <dt>Proprietário permite animais</dt>
+        <dd>{{ adoption.adopter.adopter_profile.allows_pets|yesno:"Sim,Não,Não informado" }}</dd>
+      </div>
+      {% endif %}
+      <div>
+        <dt>Telas ou muros</dt>
+        <dd>{{ adoption.adopter.adopter_profile.has_protection|yesno:"Sim,Não" }}</dd>
+      </div>
+      <div>
+        <dt>Pessoas na casa</dt>
+        <dd>{{ adoption.adopter.adopter_profile.household_size }}</dd>
+      </div>
+      <div>
+        <dt>Crianças na casa</dt>
+        <dd>{{ adoption.adopter.adopter_profile.has_children|yesno:"Sim,Não" }}</dd>
+      </div>
+      <div class="facts__wide">
+        <dt>Outros animais</dt>
+        <dd>{{ adoption.adopter.adopter_profile.other_pets|default:"Nenhum informado"|linebreaksbr }}</dd>
+      </div>
+      <div class="facts__wide">
+        <dt>Experiência com animais</dt>
+        <dd>{{ adoption.adopter.adopter_profile.experience|default:"Não informada"|linebreaksbr }}</dd>
+      </div>
+    </dl>
+    {% else %}
+    <p class="muted m-0">O interessado ainda não preencheu o perfil.</p>
+    {% endif %}
+  </section>
+
+  <section class="card card--roomy" aria-labelledby="answers-title">
+    <h2 class="h5 fw-bold" id="answers-title">Respostas do pedido</h2>
+    <dl class="facts facts--cols">
+      <div class="facts__wide">
+        <dt>Por que quer adotar</dt>
+        <dd>{{ adoption.motivation|linebreaksbr }}</dd>
+      </div>
+      <div>
+        <dt>Horas sozinho por dia</dt>
+        <dd>{{ adoption.hours_alone }} h</dd>
+      </div>
+      <div>
+        <dt>Todos da casa concordam</dt>
+        <dd>{{ adoption.household_agrees|yesno:"Sim,Não" }}</dd>
+      </div>
+      <div>
+        <dt>Termo de adoção responsável</dt>
+        <dd>Aceito em {{ adoption.accepted_terms_at|date:"d/m/Y H:i" }}</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="card card--roomy" aria-labelledby="decision-title">
+    <h2 class="h5 fw-bold" id="decision-title">Decisão</h2>
 
     {% if adoption.status == "pending" %}
+    <p class="muted m-0">Esta solicitação ainda não foi analisada.</p>
     <form method="post" action="{% url 'approve_adoption' adoption.pk %}" class="mt-3">
       {% csrf_token %}
       <button type="submit" class="btn">Aprovar adoção</button>
     </form>
+    {% else %}
+    <dl class="facts facts--cols">
+      <div>
+        <dt>Situação</dt>
+        <dd>{{ adoption.get_status_display }}</dd>
+      </div>
+      {% if adoption.reviewed_at %}
+      <div>
+        <dt>Analisado por</dt>
+        <dd>{{ adoption.reviewed_by.name|default:adoption.reviewed_by.email|default:"—" }}</dd>
+      </div>
+      <div>
+        <dt>Analisado em</dt>
+        <dd>{{ adoption.reviewed_at|date:"d/m/Y H:i" }}</dd>
+      </div>
+      {% endif %}
+      <div>
+        <dt>Atualizado em</dt>
+        <dd>{{ adoption.updated_at|date:"d/m/Y H:i" }}</dd>
+      </div>
+      {% if adoption.decision_note %}
+      <div class="facts__wide">
+        <dt>Observações da ONG</dt>
+        <dd>{{ adoption.decision_note|linebreaksbr }}</dd>
+      </div>
+      {% endif %}
+    </dl>
     {% endif %}
   </section>
 </div>

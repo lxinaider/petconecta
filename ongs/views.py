@@ -1,11 +1,11 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from ongs.forms import OngForm
 from ongs.models import Ong
-from pets.models import Adoption
+from pets.models import AdoptionRequest
 from users.models import User
 
 
@@ -93,7 +93,7 @@ def add_admin(request):
         messages.error(request, "Informe o e-mail do usuário.")
     elif admin is None:
         messages.error(request, "Nenhum usuário encontrado com esse e-mail.")
-    elif admin.ong_id == ong.pk:
+    elif admin.ong.pk == ong.pk:
         messages.error(request, "Esse usuário já é administrador da ONG.")
     elif admin.ong is not None:
         messages.error(request, "Esse usuário já administra outra ONG.")
@@ -111,10 +111,10 @@ def home(request):
     if ong is None:
         return redirect("create_ong")
 
-    pending_adoptions = Adoption.objects.filter(
+    pending_adoptions = AdoptionRequest.objects.filter(
         pet__ong=ong,
-        status=Adoption.Status.PENDING,
-    ).select_related("pet", "user")
+        status=AdoptionRequest.AdoptionStatus.PENDING,
+    ).select_related("pet", "adopter")
     return render(
         request,
         "ongs/index.html",
@@ -129,7 +129,7 @@ def adoption_detail(request, pk):
         return redirect("create_ong")
 
     adoption = get_object_or_404(
-        Adoption.objects.select_related("pet", "user"),
+        AdoptionRequest.objects.select_related("pet", "adopter"),
         pk=pk,
         pet__ong=ong,
     )
@@ -148,15 +148,15 @@ def approve_adoption(request, pk):
         return redirect("create_ong")
 
     adoption = get_object_or_404(
-        Adoption,
+        AdoptionRequest,
         pk=pk,
         pet__ong=ong,
-        status=Adoption.Status.PENDING,
+        status=AdoptionRequest.AdoptionStatus.PENDING,
     )
-    adoption.status = Adoption.Status.APPROVED
+    adoption.status = AdoptionRequest.AdoptionStatus.APPROVED
     adoption.save(update_fields=["status"])
     messages.success(
         request,
-        f"A adoção de {adoption.pet.name} por {adoption.user.name or adoption.user.email} foi aprovada.",
+        f"A adoção de {adoption.pet.name} por {adoption.adopter.name or adoption.adopter.email} foi aprovada.",
     )
     return redirect("home_ong")

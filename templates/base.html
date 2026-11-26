@@ -27,7 +27,22 @@
   <body>
     {% include 'navbar.html' %}
 
-    <main class="p-6">{% block content %} {% endblock %}</main>
+    <main class="p-6">
+      {% if messages %}
+      <div class="message-list">
+        {% for message in messages %}
+        <div
+          class="message message--{{ message.level_tag }}"
+          role="{% if message.level_tag == 'error' %}alert{% else %}status{% endif %}"
+        >
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% block content %}{% endblock %}
+    </main>
 
     <script
       type="module"

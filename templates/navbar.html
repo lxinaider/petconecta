@@ -14,7 +14,7 @@
       </li>
     </ul>
 
-    <form class="navbar-search d-flex align-items-center gap-2 ms-3" method="get" action="{% url 'home' %}">
+    <form class="navbar-search d-flex ms-auto align-items-center gap-2 ms-3" method="GET" action="{% url 'home' %}">
       <input
         class="form-control form-control-sm"
         type="search"
@@ -28,7 +28,6 @@
       </button>
     </form>
 
-    <!-- ms-auto moved here -->
     <ul class="navbar-nav ms-auto">
       {% if user.is_authenticated %}
       <li class="nav-item">
@@ -56,13 +55,13 @@
       </li>
       {% elif user.is_authenticated %}
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'create_ong' %}">ONG</a>
+        <a class="nav-link" href="{% url 'create_ong' %}">Cadastrar ONG</a>
       </li>
       {% endif %}
 
       {% if user.is_staff %}
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+        <a class="nav-link" href="{% url 'admin_panel' %}">Admin</a>
       </li>
       {% endif %}
     </ul>

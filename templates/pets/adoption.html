@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Petconecta - Adotar {{ pet.name }}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/forms.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="form-wrap">
+    <section class="card">
+        <div class="card__body">
+            <h1 class="card__title">Adotar {{ pet.name }}</h1>
+            <p class="card__subtitle">
+                {{ pet.ong.trade_name }} vai analisar suas respostas antes de
+                entrar em contato.
+            </p>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                <h2 class="card__heading">Sobre você e sua casa</h2>
+                {% include 'partials/fields.html' with form=profile_form %}
+
+                <h2 class="card__heading">Sobre este pedido</h2>
+                {% include 'partials/fields.html' with form=request_form %}
+
+                <button type="submit" class="btn btn--lg btn--block mt-2">
+                    Enviar solicitação
+                </button>
+            </form>
+        </div>
+    </section>
+</div>
+{% endblock %}

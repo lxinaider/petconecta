@@ -9,13 +9,13 @@ class RegisterForm(UserCreationForm):
         model = User
         fields = ("name", "email", "phone")
 
-        labels = {  # noqa: RUF012
+        labels = {
             "name": "Nome completo",
             "email": "E-mail",
             "phone": "Telefone",
         }
 
-        widgets = {  # noqa: RUF012
+        widgets = {
             "name": forms.TextInput(attrs={"class": "form-control"}),
             "email": forms.EmailInput(attrs={"class": "form-control"}),
             "phone": forms.TextInput(attrs={"class": "form-control"}),
@@ -34,11 +34,7 @@ class LoginForm(AuthenticationForm):
 
         self.fields["username"].label = "E-mail"
         self.fields["username"].widget = forms.EmailInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "Digite seu e-mail",
-                "autocomplete": "email",
-            }
+            attrs={"class": "form-control", "placeholder": "Digite seu e-mail"}
         )
         self.fields["password"].label = "Password"
         self.fields["password"].widget.attrs.update(

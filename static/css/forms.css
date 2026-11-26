@@ -22,6 +22,7 @@
 
 .form-field
   :is(input:not([type="checkbox"], [type="radio"]), select, textarea) {
+  background: var(--bs-bg-2);
   width: 100%;
   padding: 0.7rem 0.9rem;
   font: inherit;
@@ -59,4 +60,21 @@
   font-size: 0.9rem;
   color: color-mix(in srgb, var(--danger) 80%, black);
   background: color-mix(in srgb, var(--danger) 10%, transparent);
+}
+
+.form-field--check {
+  display: flex;
+  align-items: start;
+}
+
+.form-field--check label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.form-field input[type="checkbox"] {
+  width: 1.4rem;
+  height: 1.4rem;
+  margin: 0;
 }

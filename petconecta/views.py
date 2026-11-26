@@ -8,7 +8,9 @@ from pets.models import Pet
 
 
 def home(request):
-    pets = Pet.objects.filter(ong__status=Ong.Status.APPROVED)
+    pets = Pet.objects.filter(ong__status=Ong.Status.APPROVED).filter(
+        archived__isnull=True
+    )
     query = request.GET.get("q", "").strip()
 
     if query:
@@ -23,7 +25,7 @@ def admin(request):
         return HttpResponse(status=403)
 
     pending_ongs = Ong.objects.filter(status=Ong.Status.PENDING).order_by("-id")
-    return render(request, "admin/index.html", {"pending_ongs": pending_ongs})
+    return render(request, "admin_panel/index.html", {"pending_ongs": pending_ongs})
 
 
 @login_required
@@ -38,7 +40,7 @@ def approve_ong(request, pk):
     if ong.created_by is not None:
         ong.created_by.ong = ong
         ong.created_by.save(update_fields=["ong"])
-    return redirect("admin")
+    return redirect("admin_panel")
 
 
 @login_required
@@ -50,4 +52,4 @@ def reject_ong(request, pk):
     ong = get_object_or_404(Ong, pk=pk, status=Ong.Status.PENDING)
     ong.status = Ong.Status.REJECTED
     ong.save(update_fields=["status"])
-    return redirect("admin")
+    return redirect("admin_panel")

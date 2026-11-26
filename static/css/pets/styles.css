@@ -10,3 +10,7 @@
   gap: 1.5rem;
   padding: 2rem 1rem;
 }
+
+.card--split .card__media {
+    width: 25em;
+}

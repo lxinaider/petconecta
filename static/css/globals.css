@@ -39,3 +39,22 @@
 body {
   font-family: "Intern", sans-serif;
 }
+
+.message-list {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.message {
+  --accent: var(--brand-3);
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-control);
+  font-size: 0.9rem;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.message--success { --accent: #16a34a; }
+.message--warning { --accent: var(--brand-4); }
+.message--error   { --accent: var(--danger); }

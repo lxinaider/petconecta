@@ -29,10 +29,9 @@
         Solicitação {{ adoption.get_status_display|lower }}
       </button>
       {% else %}
-      <form method="post" action="{% url 'request_adoption' pet.pk %}" class="mt-auto align-self-start">
-        {% csrf_token %}
-        <button type="submit" class="btn btn--lg">Adotar {{ pet.name }}</button>
-      </form>
+      <a href="{% url 'request_adoption' pet.pk %}" class="btn btn--lg mt-auto align-self-start">
+        Adotar {{ pet.name }}
+      </a>
       {% endif %}
     </div>
   </article>

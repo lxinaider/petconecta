@@ -78,7 +78,7 @@
               {% for adoption in pending_adoptions %}
               <tr>
                 <td>{{ adoption.pet.name }}</td>
-                <td>{{ adoption.user.name|default:adoption.user.email }}</td>
+                <td>{{ adoption.adopter.name|default:adoption.adopter.email }}</td>
                 <td>{{ adoption.created_at|date:"d/m/Y H:i" }}</td>
                 <td class="data-table__actions">
                   <a
@@ -122,6 +122,7 @@
               <tr>
                 <th scope="col">Pet</th>
                 <th scope="col">Espécie</th>
+                <th scope="col">Arquivado</th>
                 <th scope="col" class="data-table__actions">Ações</th>
               </tr>
             </thead>
@@ -150,6 +151,7 @@
                   </div>
                 </td>
                 <td>{{ pet.species }}</td>
+                <td>{{ pet.archived|default:"Não arquivado" }}</td>
                 <td class="data-table__actions">
                   <a
                     href="{% url 'detail_pet' pet.pk %}"
@@ -206,8 +208,7 @@
           class="d-flex gap-2 align-items-start mb-3"
         >
           {% csrf_token %}
-          <div class="flex-grow-1">
-            <label for="admin-email" class="visually-hidden">E-mail do usuário</label>
+          <div class="flex-grow-1 form-field">
             <input
               id="admin-email"
               name="email"
