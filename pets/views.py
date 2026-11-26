@@ -97,7 +97,6 @@ def request_adoption(request, pk):
     request_form = AdoptionRequestForm(request.POST or None, prefix="request")
 
     if request.method == "POST":
-        # build the list first so both forms validate and show all their errors
         if all([profile_form.is_valid(), request_form.is_valid()]):
             profile = profile_form.save(commit=False)
             profile.user = request.user
