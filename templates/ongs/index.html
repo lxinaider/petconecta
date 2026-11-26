@@ -23,10 +23,6 @@
           alt="{{ ong.trade_name }}"
           loading="lazy"
         />
-        {% else %}
-        <span class="card__placeholder" aria-hidden="true"
-          >{{ ong.trade_name|slice:":1"|upper }}</span
-        >
         {% endif %}
       </div>
 

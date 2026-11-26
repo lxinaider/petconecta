@@ -38,7 +38,13 @@
 
   <section class="card card--row" aria-labelledby="ong-title">
     <div class="avatar avatar--lg" aria-hidden="true">
-      {{ pet.ong.trade_name|slice:":1"|upper }}
+        {% if ong.image %}
+        <img
+          src="{{ ong.image.url }}"
+          alt="{{ ong.trade_name }}"
+          loading="lazy"
+        />
+        {% endif %}
     </div>
 
     <div class="card__info">
