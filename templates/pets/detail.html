@@ -1,7 +1,13 @@
-{% extends 'base.html' %} {% load static %} {% block title %}Petconecta
-- {{pet.name }}{% endblock %} {% block head %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Petconecta - {{pet.name }}{% endblock %}
+
+{% block head %}
 <link rel="stylesheet" href="{% static 'css/pets/styles.css' %}" />
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
 <div class="pet-detail-wrap">
   <a href="{% url 'home' %}" class="marker fw-semibold align-self-start">
     <i class="bi bi-arrow-left"></i> Voltar

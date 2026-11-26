@@ -115,7 +115,7 @@ def home(request):
     pending_adoptions = AdoptionRequest.objects.filter(
         pet__ong=ong,
         status=AdoptionRequest.AdoptionStatus.PENDING,
-    ).select_related("pet", "adopter")
+    )
     return render(
         request,
         "ongs/index.html",
@@ -130,7 +130,7 @@ def adoption_detail(request, pk):
         return redirect("create_ong")
 
     adoption = get_object_or_404(
-        AdoptionRequest.objects.select_related("pet", "adopter"),
+        AdoptionRequest,
         pk=pk,
         pet__ong=ong,
     )
@@ -167,7 +167,6 @@ def approve_adoption(request, pk):
 def detailed_adoption_view(request):
     adoptions = (
         AdoptionRequest.objects.filter(pet__ong=request.user.ong)
-        .select_related("pet", "adopter")
         .order_by("-created_at")
     )
 
