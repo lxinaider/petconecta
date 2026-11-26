@@ -8,9 +8,7 @@ from pets.models import Pet
 
 
 def home(request):
-    pets = Pet.objects.filter(ong__status=Ong.Status.APPROVED).filter(
-        archived__isnull=True
-    )
+    pets = Pet.objects.filter(ong__status=Ong.Status.APPROVED, archived__isnull=True)
     query = request.GET.get("q", "").strip()
 
     if query:

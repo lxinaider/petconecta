@@ -1,11 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from ongs.forms import OngForm
 from ongs.models import Ong
-from pets.models import AdoptionRequest
+from pets.models import AdoptionRequest, Pet
 from users.models import User
 
 
@@ -93,8 +94,8 @@ def add_admin(request):
         messages.error(request, "Informe o e-mail do usuário.")
     elif admin is None:
         messages.error(request, "Nenhum usuário encontrado com esse e-mail.")
-    elif admin.ong.pk == ong.pk:
-        messages.error(request, "Esse usuário já é administrador da ONG.")
+    elif admin.ong != None:
+        messages.error(request, "Esse usuário já é administrador de uma ONG.")
     elif admin.ong is not None:
         messages.error(request, "Esse usuário já administra outra ONG.")
     else:
@@ -135,7 +136,7 @@ def adoption_detail(request, pk):
     )
     return render(
         request,
-        "ongs/adoption_detail.html",
+        "ongs/adoption/index.html",
         {"ong": ong, "adoption": adoption},
     )
 
@@ -160,3 +161,47 @@ def approve_adoption(request, pk):
         f"A adoção de {adoption.pet.name} por {adoption.adopter.name or adoption.adopter.email} foi aprovada.",
     )
     return redirect("home_ong")
+
+
+@login_required
+def detailed_adoption_view(request):
+    adoptions = (
+        AdoptionRequest.objects.filter(pet__ong=request.user.ong)
+        .select_related("pet", "adopter")
+        .order_by("-created_at")
+    )
+
+    filters = {
+        "status": request.GET.get("status", ""),
+        "pet": request.GET.get("pet", ""),
+        "species": request.GET.get("species", ""),
+        "adopter": request.GET.get("adopter", ""),
+    }
+
+    if filters["status"]:
+        adoptions = adoptions.filter(status=filters["status"])
+
+    if filters["pet"]:
+        adoptions = adoptions.filter(pet__name__icontains=filters["pet"])
+
+    if filters["species"]:
+        adoptions = adoptions.filter(pet__species=filters["species"])
+
+    if filters["adopter"]:
+        adoptions = adoptions.filter(
+            Q(adopter__name__icontains=filters["adopter"])
+            | Q(adopter__email__icontains=filters["adopter"])
+        )
+
+    return render(
+        request,
+        "ongs/detail/adoption.html",
+        {
+            "adoptions": adoptions,
+            "filters": filters,
+            "status_choices": AdoptionRequest.AdoptionStatus.choices,
+            "species_options": Pet.objects.filter(ong=request.user.ong)
+            .values_list("species", flat=True)
+            .distinct(),
+        },
+    )

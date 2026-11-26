@@ -19,7 +19,7 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=150)
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(max_length=11)
     ong = models.ForeignKey(
         "ongs.Ong",
         on_delete=models.SET_NULL,

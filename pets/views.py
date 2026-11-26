@@ -99,25 +99,19 @@ def request_adoption(request, pk):
     if request.method == "POST":
         # build the list first so both forms validate and show all their errors
         if all([profile_form.is_valid(), request_form.is_valid()]):
-            try:
-                with transaction.atomic():
-                    profile = profile_form.save(commit=False)
-                    profile.user = request.user
-                    profile.save()
+            profile = profile_form.save(commit=False)
+            profile.user = request.user
+            profile.save()
 
-                    adoption = request_form.save(commit=False)
-                    adoption.pet = pet
-                    adoption.adopter = request.user
-                    adoption.accepted_terms_at = timezone.now()
-                    adoption.save()
-            except IntegrityError:  # double submit hit the unique constraint
-                messages.info(
-                    request, f"Você já enviou uma solicitação para adotar {pet.name}."
-                )
-            else:
-                messages.success(
-                    request, f"Sua solicitação para adotar {pet.name} foi enviada."
-                )
+            adoption = request_form.save(commit=False)
+            adoption.pet = pet
+            adoption.adopter = request.user
+            adoption.accepted_terms_at = timezone.now()
+            adoption.save()
+            messages.success(
+                request, f"Sua solicitação para adotar {pet.name} foi enviada."
+            )
+
             return redirect("detail_pet", pk=pet.pk)
 
     return render(

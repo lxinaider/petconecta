@@ -16,6 +16,7 @@
 
   --accent: var(--brand-3);
   --danger: var(--red-600);
+  --warning: var(--bs-orange-600);
 
   --radius-card: 0.75rem;
   --radius-control: 0.8rem;

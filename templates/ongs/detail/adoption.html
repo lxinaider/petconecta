@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Petconecta - Painel da ONG{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/ongs/styles.css' %}" />
+<link rel="stylesheet" href="{% static 'css/forms.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div>
+    <a href="{% url 'home_ong' %}" class="marker fw-semibold align-self-start">
+      <i class="bi bi-arrow-left"></i> Voltar
+    </a>
+
+    <header class="mb-4 mt-6">
+        <h1 class="h2 fw-bold m-0">Adoções pendentes</h1>
+    </header>
+
+    <div class="panel__main">
+        <section class="card card--roomy" aria-labelledby="adoptions-title">
+            <div class="mb-3">
+                <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+                    <h2 class="h5 fw-bold m-0" id="adoptions-title">
+                        Solicitações de adoção
+                    </h2>
+                </div>
+
+                <form method="get" class="row g-3 align-items-end">
+                    <!-- Status -->
+                    <div class="col-12 col-md-4 col-lg-3 form-field">
+                        <label for="filter-status" class="form-label">
+                            Status
+                        </label>
+                        <select
+                            name="status"
+                            id="filter-status"
+                            class="form-select"
+                        >
+                            <option value="">Todos os status</option>
+                            {% for value, label in status_choices %}
+                            <option
+                                value="{{ value }}"
+                                {% if filters.status == value %}selected{% endif %}
+                            >
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Pet -->
+                    <div class="col-12 col-md-4 col-lg-3 form-field">
+                        <label for="filter-pet" class="form-label">
+                            Pet
+                        </label>
+                        <input
+                            type="text"
+                            name="pet"
+                            id="filter-pet"
+                            class="form-control"
+                            placeholder="Nome do pet"
+                            value="{{ filters.pet }}"
+                        />
+                    </div>
+
+                    <!-- Species -->
+                    <div class="col-12 col-md-4 col-lg-2 form-field">
+                        <label for="filter-species" class="form-label">
+                            Espécie
+                        </label>
+                        <select
+                            name="species"
+                            id="filter-species"
+                            class="form-select"
+                        >
+                            <option value="">Todas</option>
+                            {% for item in species_options %}
+                            <option
+                                value="{{ item }}"
+                                {% if filters.species == item %}selected{% endif %}
+                            >
+                                {{ item|capfirst }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Adopter -->
+                    <div class="col-12 col-md-6 col-lg-4 form-field">
+                        <label for="filter-adopter" class="form-label">
+                            Interessado
+                        </label>
+                        <input
+                            type="text"
+                            name="adopter"
+                            id="filter-adopter"
+                            class="form-control"
+                            placeholder="Nome ou e-mail"
+                            value="{{ filters.adopter }}"
+                        />
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="col-12 col-lg-3 d-flex gap-2 form-field">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-funnel"></i>
+                            Filtrar
+                        </button>
+
+                        <a href="?" class="btn btn-outline-secondary">
+                            Limpar
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Pet</th>
+                            <th scope="col">Interessado</th>
+                            <th scope="col">Solicitado em</th>
+                            <th scope="col" class="data-table__actions">
+                                Ações
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for adoption in adoptions %}
+                        <tr>
+                            <td>
+                                <div class="d-flex flex-row align-items-center gap-4">
+                                <div
+                                    class="avatar avatar--sm avatar--square"
+                                    aria-hidden="true"
+                                >
+                                    {% if adoption.pet.image %}
+                                    <img
+                                        src="{{ adoption.pet.image.url }}"
+                                        alt=""
+                                    />
+                                    {% endif %}
+                                </div>
+                                {{ adoption.pet.name }}
+                                </div>
+                            </td>
+                            <td>
+                                {{ adoption.adopter.name|default:adoption.adopter.email }}
+                            </td>
+                            <td>{{ adoption.created_at|date:"d/m/Y H:i" }}</td>
+                            <td class="data-table__actions">
+                                <a
+                                    href="{% url 'adoption_detail' adoption.pk %}"
+                                    class="btn btn--icon btn--ghost"
+                                    title="Ver detalhes"
+                                >
+                                    <i class="bi bi-eye-fill"></i>
+                                </a>
+                                {% if adoption.status != "approved" %}
+                                    <form
+                                        method="post"
+                                        action="{% url 'approve_adoption' adoption.pk %}"
+                                        class="inline-form"
+                                    >
+                                        {% csrf_token %}
+                                        <button
+                                            type="submit"
+                                            class="btn"
+                                            title="Aprovar adoção"
+                                        >
+                                            Aprovar
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="data-table__empty">
+                                Nenhuma adoção pendente
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

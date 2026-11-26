@@ -52,9 +52,9 @@ class AdoptionRequestForm(forms.ModelForm):
 class PetForm(forms.ModelForm):
     class Meta:
         model = Pet
-        fields = ["name", "species", "breed", "image", "description"]  # noqa: RUF012
+        fields = ["name", "species", "breed", "image", "description"]
 
-        labels = {  # noqa: RUF012
+        labels = {
             "name": "Nome",
             "species": "Espécie",
             "breed": "Raça",
@@ -62,7 +62,7 @@ class PetForm(forms.ModelForm):
             "description": "Descrição",
         }
 
-        widgets = {  # noqa: RUF012
+        widgets = {
             "name": forms.TextInput(attrs={"class": "form-control"}),
             "species": forms.TextInput(attrs={"class": "form-control"}),
             "breed": forms.TextInput(

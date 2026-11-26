@@ -42,6 +42,10 @@
   --accent: var(--danger);
 }
 
+.btn--warning {
+  --accent: var(--warning);
+}
+
 .btn--ghost {
   color: var(--accent);
   background: color-mix(in srgb, var(--accent) 12%, transparent);

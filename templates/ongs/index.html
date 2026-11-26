@@ -62,6 +62,13 @@
       <section class="card card--roomy" aria-labelledby="adoptions-title">
         <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
           <h2 class="h5 fw-bold m-0" id="adoptions-title">Solicitações de adoção pendentes</h2>
+          <a
+            href="{% url 'detailed_adoption_view' %}"
+            class="btn btn--ghost"
+            title="Ver detalhes"
+          >
+            Detalhar
+          </a>
         </div>
 
         <div class="table-responsive">
@@ -86,7 +93,7 @@
                     class="btn btn--icon btn--ghost"
                     title="Ver detalhes"
                   >
-                    <i class="fa-solid fa-eye"></i>
+                    <i class="bi bi-eye-fill"></i>
                   </a>
                   <form method="post" action="{% url 'approve_adoption' adoption.pk %}" class="inline-form">
                     {% csrf_token %}
@@ -134,12 +141,6 @@
                     <span class="avatar avatar--sm avatar--square">
                       {% if pet.image %}
                       <img src="{{ pet.image.url }}" alt="" loading="lazy" />
-                      {% else %}
-                      <img
-                        src="{% static 'img/dog.png' %}"
-                        alt=""
-                        loading="lazy"
-                      />
                       {% endif %}
                     </span>
                     <span class="d-flex flex-column lh-sm">
@@ -158,14 +159,14 @@
                     class="btn btn--icon btn--ghost"
                     title="Ver"
                   >
-                    <i class="fa-solid fa-eye"></i>
+                    <i class="bi bi-eye-fill"></i>
                   </a>
                   <a
                     href="{% url 'update_pet' pet.pk %}"
                     class="btn btn--icon btn--ghost"
                     title="Editar"
                   >
-                    <i class="fa-solid fa-pen"></i>
+                    <i class="bi bi-pen-fill"></i>
                   </a>
                   <form
                     method="POST"
@@ -175,10 +176,10 @@
                     {% csrf_token %}
                     <button
                       type="submit"
-                      class="btn btn--icon btn--ghost btn--danger"
-                      title="Remover"
+                      class="btn btn--icon btn--ghost btn--warning"
+                      title="Arquivar"
                     >
-                      <i class="fa-solid fa-trash"></i>
+                      <i class="bi bi-archive-fill"></i>
                     </button>
                   </form>
                 </td>
@@ -221,17 +222,6 @@
           <button type="submit" class="btn">Adicionar</button>
         </form>
 
-        {% if messages %}
-        {% for message in messages %}
-        <div
-          class="form-alert {% if message.tags == 'error' %}fg-danger{% endif %}"
-          role="alert"
-        >
-          {{ message }}
-        </div>
-        {% endfor %}
-        {% endif %}
-
         <div class="table-responsive">
           <table class="data-table">
             <thead>
@@ -266,7 +256,7 @@
                       class="btn btn--icon btn--ghost btn--danger"
                       title="Remover"
                     >
-                      <i class="fa-solid fa-trash"></i>
+                      <i class="bi bi-trash2-fill"></i>
                     </button>
                   </form>
                   {% else %}

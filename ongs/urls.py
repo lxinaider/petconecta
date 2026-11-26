@@ -9,6 +9,13 @@ urlpatterns = [
     path("delete/admin/<int:pk>", views.delete_admin, name="delete_admin"),
     path("add/admin/", views.add_admin, name="add_admin"),
     path("adoptions/<int:pk>/", views.adoption_detail, name="adoption_detail"),
-    path("adoptions/<int:pk>/approve/", views.approve_adoption, name="approve_adoption"),
+    path(
+        "adoptions/<int:pk>/approve/", views.approve_adoption, name="approve_adoption"
+    ),
+    path(
+        "detail/adoptions/",
+        views.detailed_adoption_view,
+        name="detailed_adoption_view",
+    ),
     path("", views.home, name="home_ong"),
 ]
